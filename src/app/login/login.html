@@ -1,0 +1,66 @@
+<main>
+
+    <img src="login-shelf.jpg">
+
+    <div>
+
+        <form (ngSubmit)="login()" class="login">
+            <h1>Enter Store</h1>
+
+            <errorBar [errorText]="errorText()"></errorBar>
+
+            <label>email</label>
+            <input type="email" name="email" required placeholder="Store email" [(ngModel)]="LoginData.email">
+
+            <label>password</label>
+            <input type="password" name="password" required placeholder="Store password" [(ngModel)]="LoginData.password">
+
+            <button class="logBtn" type="submit">Login</button>
+
+            <h4>OR</h4>
+
+            <button class="accBtn" type="button" (click)="openCreate()">Create store</button>
+
+        </form>
+
+    </div>
+
+</main>
+
+@if (createStore()) {
+    <main>
+
+        <div>
+
+            <form (ngSubmit)="signin()">
+                <h1>Create Store</h1>
+
+                <errorBar [errorText]="errorText()"></errorBar>
+
+                <label>Name</label>
+                <input type="text" name="name" required placeholder="Store name:" [(ngModel)]="signinData.name">
+
+                <label>Email</label>
+                <input type="email" name="email" required placeholder="Store email:" [(ngModel)]="signinData.email">
+
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="Store secret password" [(ngModel)]="signinData.password">
+
+                <button class="signBtn" type="submit">Submit</button>
+
+                <h4>OR</h4>
+
+                <button class="accBtn" type="button" (click)="closeCreate()">Login</button>
+
+            </form>
+
+        </div>
+
+        <img src="signin-shelf.jpg">
+
+
+    </main>
+
+
+}
+
