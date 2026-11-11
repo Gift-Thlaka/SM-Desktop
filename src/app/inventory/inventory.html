@@ -1,0 +1,28 @@
+<main>
+
+    <section>
+
+        <errorBar [errorText]="errorText()"></errorBar>
+
+        @for (item of inventoryList(); track item.id) {
+
+            @if (inventoryList().length === 0) {
+                <p>Inventory is empty</p>
+            }
+
+            <div class="item">
+                <strong>{{item.name}}</strong>
+
+                <p>{{item.barcode}}</p>
+
+                <p>{{item.price}}</p>
+
+                <p>{{item.total}}</p>
+
+                <button type="button" (click)="updateItem(item.id)">update</button>
+            </div>
+
+        }
+
+    </section>
+</main>

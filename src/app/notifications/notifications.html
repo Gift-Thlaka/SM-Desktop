@@ -1,0 +1,22 @@
+<main>
+
+    <section>
+
+        <errorBar [errorText]="errorText()"></errorBar>
+
+        @for (item of notificationList(); track item.id) {
+
+            @if (notificationList().length === 0) {
+                <p>No notifications yet.</p>
+            }
+
+            <div class="item">
+                <strong>{{item.name}}</strong>
+                <p>{{item.instruction}}</p>
+                <button type="button" (click)="updated(item.id)">Assign to staff</button>
+            </div>
+
+        }
+
+    </section>
+</main>
