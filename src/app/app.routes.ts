@@ -4,6 +4,7 @@ import { DashboardScreen } from './dashboard/dashboard';
 import { LoginScreen } from './login/login';
 import { Notifications } from './notifications/notifications';
 import { InventoryPage } from './inventory/inventory';
+import { authGuard } from './auth.guard';
 
 
 export const routes: Routes = [
@@ -16,7 +17,8 @@ export const routes: Routes = [
 
     {
         path: 'dashboard',
-        component: DashboardScreen
+        component: DashboardScreen,
+        canActivate: [authGuard]
     },
 
     {
@@ -26,12 +28,14 @@ export const routes: Routes = [
 
     {
         path: 'notifications',
-        component: Notifications
+        component: Notifications,
+        canActivate: [authGuard]
     },
 
     {
         path: 'staff',
-        component: InventoryPage
+        component: InventoryPage,
+        canActivate: [authGuard]
     }
 
 ];

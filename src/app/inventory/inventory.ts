@@ -1,3 +1,4 @@
+
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +9,6 @@ interface staff {
     name: string,
     role: string,
     password: string
-
 }
 
 interface StaffList extends staff {
@@ -34,18 +34,26 @@ export class InventoryPage implements OnInit {
 
     errorText = signal('');
 
-    StaffList = signal(<StaffList[]> ([]));
+    StaffList = signal<StaffList[]>([]);
 
     getStaff(): void {
-        this.http.get<StaffList[]> (
-            'http://localhost:8000/inventory-staff'
-        ).subscribe ({
+
+        const S_id = localStorage.getItem('S_id');
+
+        if (!S_id) {
+            this.errorText.set('Shop not found.');
+            return;
+        }
+
+        this.http.get<StaffList[]>(
+            `http://localhost:8000/inventory-staff?S_id=${S_id}`
+        ).subscribe({
             next: (success) => {
                 this.errorText.set('');
                 this.StaffList.set(success);
             },
             error: (error) => {
-                this.errorText.set(error.error?.detail || 'failed to get Staff');
+                this.errorText.set(error.error?.detail || 'Failed to get Staff');
             }
         });
     }
@@ -55,9 +63,17 @@ export class InventoryPage implements OnInit {
         role: '',
         password: ''
     }
+
     addEmployee(): void {
 
-        if (this.Staff.name.trim()  === '') {
+        const S_id = localStorage.getItem('S_id');
+
+        if (!S_id) {
+            this.errorText.set('Shop not found.');
+            return;
+        }
+
+        if (this.Staff.name.trim() === '') {
             this.errorText.set("Enter name.");
             return;
         }
@@ -70,9 +86,13 @@ export class InventoryPage implements OnInit {
             return;
         }
 
-        this.http.post (
-            'http://localhost:8000/add-employee', this.Staff
-        ).subscribe ({
+        this.http.post(
+            'http://localhost:8000/add-employee',
+            {
+                ...this.Staff,
+                S_id: Number(S_id)
+            }
+        ).subscribe({
             next: (success) => {
                 this.errorText.set('');
                 this.Staff.name = '';
@@ -81,16 +101,27 @@ export class InventoryPage implements OnInit {
                 this.getStaff();
             },
             error: (error) => {
-                this.errorText.set(error.error?.detail || "Failed to register employee.");
+                this.errorText.set(error.error?.detail || 'Failed to register employee.');
             }
-        })
-
+        });
     }
 
     removeStaff(E_Id: number): void {
+
+        const S_id = localStorage.getItem('S_id');
+
+        if (!S_id) {
+            this.errorText.set('Shop not found.');
+            return;
+        }
+
         this.http.post(
-            'http://localhost:8000/delete-staff', {E_id: E_Id}
-        ).subscribe ({
+            'http://localhost:8000/delete-staff',
+            {
+                E_id: E_Id,
+                S_id: Number(S_id)
+            }
+        ).subscribe({
             next: (success) => {
                 this.errorText.set('');
                 this.getStaff();

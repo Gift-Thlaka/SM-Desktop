@@ -1,8 +1,8 @@
+
 import { Component, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { FormsModule} from '@angular/forms'
-import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { ErrorBar } from '../errorBar/errorBar';
 
@@ -15,6 +15,11 @@ interface signIns {
     name: string,
     email: string,
     password: string
+}
+
+interface LoginResponse {
+    message: string,
+    S_id: number
 }
 
 @Component ({
@@ -48,13 +53,17 @@ export class LoginScreen {
             return;
         }
 
-        this.http.post (
-            'http:localhost:8000/login', this.LoginData
+        this.http.post<LoginResponse>(
+            'http://localhost:8000/login', this.LoginData
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
+
+                localStorage.setItem('M_id', success.S_id.toString());
+
                 this.LoginData.email = '';
                 this.LoginData.password = '';
+
                 this.router.navigate(['dashboard']);
             },
             error: (error) => {
@@ -65,12 +74,14 @@ export class LoginScreen {
     }
 
     createStore = signal(false);
+
     openCreate(): void {
         this.createStore.set(true);
         this.errorText.set('');
     }
+
     closeCreate(): void {
-        this.createStore.set(false)
+        this.createStore.set(false);
         this.errorText.set('');
     }
 
@@ -82,12 +93,11 @@ export class LoginScreen {
 
     signin(): void {
 
-
         if (this.signinData.name.trim() === '') {
             this.errorText.set('Enter store name');
             return;
         }
-        
+
         if (this.signinData.email.trim() === '') {
             this.errorText.set('Enter email');
             return;
@@ -98,14 +108,18 @@ export class LoginScreen {
             return;
         }
 
-        this.http.post(
-            'http://localhost:8000/sigin', this.signinData
+        this.http.post<LoginResponse>(
+            'http://localhost:8000/signin', this.signinData
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
+
+                localStorage.setItem('S_id', success.S_id.toString());
+
                 this.signinData.name = '';
                 this.signinData.email = '';
                 this.signinData.password = '';
+
                 this.router.navigate(['dashboard']);
             },
             error: (error) => {

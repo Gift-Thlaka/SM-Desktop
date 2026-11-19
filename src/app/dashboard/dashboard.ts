@@ -10,6 +10,7 @@ interface product {
     price: string,
     barcode: string,
     best_before: string,
+    S_id: number
     
 }
 
@@ -37,11 +38,20 @@ export class DashboardScreen implements OnInit {
         this.getShelf();
     }
 
+
     items = signal(<shelfProduct[]> ([]));
 
     getShelf(): void {
+
+        const S_id = localStorage.getItem('S_id');
+
+        if (!S_id) {
+            this.errorText.set('Manager not found.');
+            return;
+        }
+
         this.http.get<shelfProduct[]> (
-            'http://localhost:8000/get-shelf'
+            `http://localhost:8000/get-shelf?S_id=${S_id}`
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
@@ -58,7 +68,8 @@ export class DashboardScreen implements OnInit {
         size: '',
         price: '',
         barcode: '',
-        best_before: ''
+        best_before: '',
+        S_id: 0
     }
 
     addProduct(): void {
@@ -88,11 +99,26 @@ export class DashboardScreen implements OnInit {
             return;        
         }
 
+        const S_id = localStorage.getItem('S_id');
+
+        if (!S_id) {
+            this.errorText.set('Manager not found. Please login again.');
+            return;
+        }
+
+        this.products.S_id = Number(S_id);
+
         this.http.post (
             'http://localhost:8000/add-product', this.products
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
+                this.getShelf();
+                this.products.name = '';
+                this.products.size = '';
+                this.products.price = '';
+                this.products.barcode = '';
+                this.products.best_before = '';
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to add new product');
@@ -123,11 +149,11 @@ export class DashboardScreen implements OnInit {
         }
 
         this.http.post(
-            'http://localhost:8000/update-item', {item_id: ItemId, peicw: this.products.price}
+            'http://localhost:8000/update-item', {item_id: ItemId, price: this.products.price}
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
-                this.products.price=('');
+                this.products.price='';
                 this.closeUpdate();
                 this.getShelf();
             },

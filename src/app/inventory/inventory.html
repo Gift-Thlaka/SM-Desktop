@@ -32,14 +32,14 @@
 
             <form (ngSubmit)="addEmployee()">
                 <label>Name</label>
-                <input type="text" name="name" required placeholder="Employee name:">
+                <input type="text" name="name" required placeholder="Employee name:" [(ngModel)]="Staff.name">
 
                 <label>Department</label>
-                <input type="text" name="role" required placeholder="Employee department">
+                <input type="text" name="role" required placeholder="Employee department" [(ngModel)]="Staff.role">
 
                 <span>Only employee must enter the password</span>
                 <label>Password</label>
-                <input type="password" name="password" required placeholder="Employee secret password">
+                <input type="password" name="password" required placeholder="Employee secret password" [(ngModel)]="Staff.password">
 
                 <button type="submit" class="Sbtn">Submit</button>
 
