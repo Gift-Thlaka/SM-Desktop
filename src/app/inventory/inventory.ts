@@ -4,12 +4,16 @@ import { HttpClient } from '@angular/common/http';
 
 import { ErrorBar } from '../errorBar/errorBar';
 
-interface items {
-    id: number,
+interface staff {
     name: string,
-    barcode: string,
-    price: number,
-    total: number
+    role: string,
+    password: string
+
+}
+
+interface StaffList extends staff {
+    E_id: number,
+    emp_id: string
 }
 
 @Component ({
@@ -20,34 +24,81 @@ interface items {
     styleUrls: ['./inventory.css']
 })
 
-export class InventoryScreen implements OnInit {
+export class InventoryPage implements OnInit {
 
     constructor(private http: HttpClient) {};
 
     ngOnInit(): void {
-        this.getInventory();
+        this.getStaff();
     }
 
     errorText = signal('');
 
-    inventoryList = signal(<items[]> ([]));
+    StaffList = signal(<StaffList[]> ([]));
 
-    getInventory(): void {
-        this.http.get<items[]> (
-            'http://localhost:8000/inventory-items'
+    getStaff(): void {
+        this.http.get<StaffList[]> (
+            'http://localhost:8000/inventory-staff'
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
-                this.inventoryList.set(success);
+                this.StaffList.set(success);
             },
             error: (error) => {
-                this.errorText.set(error.error?.detail || 'failed to geet inventory');
+                this.errorText.set(error.error?.detail || 'failed to get Staff');
             }
         });
     }
 
-    updateItem(ItemId: number): void {
+    Staff: staff = {
+        name: '',
+        role: '',
+        password: ''
+    }
+    addEmployee(): void {
 
+        if (this.Staff.name.trim()  === '') {
+            this.errorText.set("Enter name.");
+            return;
+        }
+        if (this.Staff.role.trim() === '') {
+            this.errorText.set("Enter department");
+            return;
+        }
+        if (this.Staff.password.trim() === '') {
+            this.errorText.set("Enter password");
+            return;
+        }
+
+        this.http.post (
+            'http://localhost:8000/add-employee', this.Staff
+        ).subscribe ({
+            next: (success) => {
+                this.errorText.set('');
+                this.Staff.name = '';
+                this.Staff.role = '';
+                this.Staff.password = '';
+                this.getStaff();
+            },
+            error: (error) => {
+                this.errorText.set(error.error?.detail || "Failed to register employee.");
+            }
+        })
+
+    }
+
+    removeStaff(E_Id: number): void {
+        this.http.post(
+            'http://localhost:8000/delete-staff', {E_id: E_Id}
+        ).subscribe ({
+            next: (success) => {
+                this.errorText.set('');
+                this.getStaff();
+            },
+            error: (error) => {
+                this.errorText.set(error.error?.detail || 'Failed to delete employee.');
+            }
+        });
     }
 
 }

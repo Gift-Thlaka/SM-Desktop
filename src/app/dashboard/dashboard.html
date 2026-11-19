@@ -2,4 +2,78 @@
 
     <errorBar [errorText]="errorText()"></errorBar>
 
+    <div class="container">
+
+        <section class="sectionA">
+            <h1>Shelf</h1>
+
+                @if (items().length === 0) {
+                    <h3>Shelf is empty</h3>
+                } @else {
+                    @for (item of items(); track $index) {
+                        <div class="span">
+                            <div class="spanCont">
+                                <p>Name: {{item.name}}</p>
+                                <p>Size: {{item.size}}</p>
+                                <p>Price: {{item.price}}</p>
+                                <p>Quantity: {{item.quantity}}</p>
+                            </div>
+
+                            <div class="spanCont">
+                                <p>Barcode: {{item.barcode}}</p>
+                                <p>Best Before: {{item.best_before}}</p>
+                                <p>Batch: {{item.batch}}</p>
+
+                                <button class="Ubtn" type="button" (click)="openUpdate(item.P_id)">Update</button>
+                            </div>
+                        </div>
+                    }
+                }
+
+        </section>
+
+        <section class="sectionB">
+            <h1>New product</h1>
+
+            <form (ngSubmit)="addProduct()">
+                <label>Name</label>
+                <input type="text" name="name" required placeholder="Name of product:" [(ngModel)]="products.name">
+
+                <label>Size</label>
+                <input type="text" name="size" required placeholder="2kg, 500mg, 70g, 500ml, 2L," [(ngModel)]="products.size">
+
+                <label>Price</label>
+                <input type="text" name="price" required placeholder="Price of product:" [(ngModel)]="products.price">
+
+                <label>barcode</label>
+                <input type="text" name="barcode" required placeholder="Barcode of product:" [(ngModel)]="products.barcode">
+
+                <label>Best Before date</label>
+                <input type="date" name="date" required [(ngModel)]="products.best_before">
+
+                <button class="Sbtn" type="submit">Submit</button>
+            </form>
+        </section>
+
+    </div>
+
 </main>
+
+@if (update()) {
+
+    <div class="popContainer">
+
+        <div class="popUp">
+            <h1>Update Item price</h1>
+            
+            <form (ngSubmit)="updateItem(selectedItem()!)">
+                <label>Price</label>
+                <input type="text" name="price" required placeholder="Update item price:" [(ngModel)]="products.price">
+
+                <button type="submit" class="Sbtn">Update</button>
+            </form>
+        </div>
+
+    </div>
+
+}

@@ -1,28 +1,52 @@
 <main>
 
-    <section>
+    <errorBar [errorText]="errorText()"></errorBar>
 
-        <errorBar [errorText]="errorText()"></errorBar>
+    <div class="container">
 
-        @for (item of inventoryList(); track item.id) {
 
-            @if (inventoryList().length === 0) {
-                <p>Inventory is empty</p>
+        <section class="sectionA">
+
+            <h1>Staff</h1>
+
+            
+
+                @if (StaffList().length === 0) {
+                    <h3>No Staff</h3>
+                } @else {
+                    @for (staff of StaffList(); track $index) {
+                    <div class="span">
+                        <p>Name: {{staff.name}}</p>
+                        <p>Department: {{staff.role}}</p>
+                        <p>Employee ID: {{staff.emp_id}}</p>
+
+                        <button type="button" class="Dbtn" (click)="removeStaff(staff.E_id)">Delete</button>
+                    </div>
+                } 
             }
 
-            <div class="item">
-                <strong>{{item.name}}</strong>
+        </section>
+        
+        <section class="sectionB">
+            <h1>new Employee</h1>
 
-                <p>{{item.barcode}}</p>
+            <form (ngSubmit)="addEmployee()">
+                <label>Name</label>
+                <input type="text" name="name" required placeholder="Employee name:">
 
-                <p>{{item.price}}</p>
+                <label>Department</label>
+                <input type="text" name="role" required placeholder="Employee department">
 
-                <p>{{item.total}}</p>
+                <span>Only employee must enter the password</span>
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="Employee secret password">
 
-                <button type="button" (click)="updateItem(item.id)">update</button>
-            </div>
+                <button type="submit" class="Sbtn">Submit</button>
 
-        }
+            </form>
 
-    </section>
+        </section>
+
+    </div>
+
 </main>
