@@ -1,0 +1,38 @@
+
+<main>
+
+    <errorBar [errorText]="errorText()"></errorBar>
+
+    <div class="container">
+
+            @if (items().length === 0) {
+                <h3>Shelf is empty</h3>
+            } @else {
+                @for (item of items(); track item.P_id) {
+                    <div class="span">
+                        <div class="spanCont">
+                            <p>Name: {{item.name}}</p>
+                            <p>Size: {{item.size}}</p>
+                            <p>Price: {{item.price}}</p>
+                            <p>Quantity: {{item.quantity}}</p>
+                        </div>
+
+                        <div class="spanCont">
+                            <p>Barcode: {{item.barcode}}</p>
+                            <p>Best Before: {{item.best_before}}</p>
+                        </div>
+
+                        <button
+                            class="Ubtn"
+                            type="button"
+                            (click)="buyProduct(item.P_id)"
+                            [disabled]="item.quantity <= 0">
+                            Buy
+                        </button>
+                    </div>
+                }
+            }
+
+    </div>
+
+</main>
