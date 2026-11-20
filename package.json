@@ -37,23 +37,24 @@
   },
 
   "build": {
-      "appId": "com.shelfmanager.desktop",
-      "productName": "Shelf Manager",
-      "directories": {
-          "output": "release"
-      },
-      "files": [
-          "main.cjs",
-          "dist/SM-Desktop/browser/**/*",
-          "package.json"
-      ],
-      "win": {
-          "target": "nsis"
-      },
-      "nsis": {
-          "oneClick": false,
-          "allowToChangeInstallationDirectory": true
-      }
+    "appId": "com.shelfmanager.desktop",
+    "productName": "Shelf Manager",
+    "directories": {
+        "output": "release"
+    },
+    "files": [
+        "main.cjs",
+        "dist/SM-Desktop/browser/**/*",
+        "package.json"
+    ],
+    "win": {
+        "target": "nsis",
+        "icon": "icons/shelf_manager_white.ico"
+    },
+    "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true
+    }
   }
 
 }
