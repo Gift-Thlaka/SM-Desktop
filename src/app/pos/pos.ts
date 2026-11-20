@@ -3,6 +3,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { ErrorBar } from '../errorBar/errorBar';
+import  {LoadingBar } from '../loading/loading';
 
 interface product {
     name: string,
@@ -22,7 +23,7 @@ interface shelfProduct extends product {
 @Component ({
     selector: 'app-pos',
     standalone: true,
-    imports: [ErrorBar],
+    imports: [ErrorBar, LoadingBar],
     templateUrl: './pos.html',
     styleUrls: ['./pos.css']
 })
@@ -32,6 +33,7 @@ export class POS implements OnInit {
     constructor(private http: HttpClient) {}
 
     errorText = signal('');
+    loading = signal(false);
 
     ngOnInit() {
         this.getShelf();
@@ -47,15 +49,19 @@ export class POS implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.get<shelfProduct[]>(
             `https://sm-api-n27i.onrender.com/get-shelf?S_id=${S_id}`
         ).subscribe({
             next: (success) => {
                 this.errorText.set('');
                 this.items.set(success);
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to get shelves');
+                this.loading.set(false);
             }
         });
     }
@@ -68,6 +74,8 @@ export class POS implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post<any>(
             'https://sm-api-n27i.onrender.com/buy-product',
             {
@@ -78,14 +86,14 @@ export class POS implements OnInit {
             next: (success) => {
                 this.errorText.set('');
                 console.log('Purchase successful:', success);
-
-                // Refresh the displayed products and quantities
                 this.getShelf();
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(
                     error.error?.detail || 'Purchase failed.'
                 );
+                this.loading.set(true);
             }
         });
     }

@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 import { ErrorBar } from '../errorBar/errorBar';
+import { LoadingBar } from '../loading/loading';
 
 interface product {
     name: string,
@@ -23,7 +24,7 @@ interface shelfProduct extends product {
 @Component ({
     selector: 'dashboard',
     standalone: true,
-    imports: [ErrorBar, FormsModule],
+    imports: [ErrorBar, FormsModule, LoadingBar],
     templateUrl: './dashboard.html',
     styleUrls: ['./dashboard.css']
 })
@@ -33,6 +34,7 @@ export class DashboardScreen implements OnInit {
     constructor (private http: HttpClient) {}
 
     errorText = signal('');
+    loading = signal(false);
 
     ngOnInit() {
         this.getShelf();
@@ -50,15 +52,19 @@ export class DashboardScreen implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.get<shelfProduct[]> (
             `https://sm-api-n27i.onrender.com/get-shelf?S_id=${S_id}`
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
                 this.items.set(success);
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to get shelves');
+                this.loading.set(false);
             }
         });
     }
@@ -101,12 +107,15 @@ export class DashboardScreen implements OnInit {
 
         const S_id = localStorage.getItem('S_id');
 
+
         if (!S_id) {
             this.errorText.set('Manager not found. Please login again.');
             return;
         }
 
         this.products.S_id = Number(S_id);
+        
+        this.loading.set(true);
 
         this.http.post (
             'https://sm-api-n27i.onrender.com/add-product', this.products
@@ -119,9 +128,11 @@ export class DashboardScreen implements OnInit {
                 this.products.price = '';
                 this.products.barcode = '';
                 this.products.best_before = '';
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to add new product');
+                this.loading.set(false);
             }
 
         })
@@ -148,6 +159,8 @@ export class DashboardScreen implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post(
             'https://sm-api-n27i.onrender.com/update-item',
             {
@@ -161,6 +174,7 @@ export class DashboardScreen implements OnInit {
                 this.products.price = '';
                 this.closeUpdate();
                 this.getShelf();
+                this.loading.set(false);
             },
             error: (error) => {
                 console.log('UPDATE ITEM ERROR:', error);
@@ -168,6 +182,7 @@ export class DashboardScreen implements OnInit {
                 this.errorText.set(
                     error.error?.detail || 'Failed to update item.'
                 );
+                this.loading.set(false);
             }
         });
     }

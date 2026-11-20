@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 import { ErrorBar } from '../errorBar/errorBar';
+import { LoadingBar } from '../loading/loading';
 
 interface logIns {
     email: string,
@@ -25,7 +26,7 @@ interface LoginResponse {
 @Component ({
     selector: 'app-login',
     standalone: true,
-    imports: [ErrorBar, FormsModule],
+    imports: [ErrorBar, FormsModule, LoadingBar],
     templateUrl: './login.html',
     styleUrls: ['./login.css']
 })
@@ -35,6 +36,7 @@ export class LoginScreen {
     constructor(private http: HttpClient, private router: Router) {}
 
     errorText = signal('');
+    loading = signal(false);
 
     LoginData: logIns = {
         email: '',
@@ -53,22 +55,26 @@ export class LoginScreen {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post<LoginResponse>(
             'https://sm-api-n27i.onrender.com/login', this.LoginData
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
 
-                localStorage.setItem('M_id', success.S_id.toString());
+                localStorage.setItem('S_id', success.S_id.toString());
 
                 this.LoginData.email = '';
                 this.LoginData.password = '';
+                this.loading.set(false);
 
                 this.router.navigate(['dashboard']);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to login, try again');
                 this.LoginData.password = '';
+                this.loading.set(false);
             }
         });
     }
@@ -108,6 +114,8 @@ export class LoginScreen {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post<LoginResponse>(
             'https://sm-api-n27i.onrender.com/signin', this.signinData
         ).subscribe ({
@@ -119,6 +127,7 @@ export class LoginScreen {
                 this.signinData.name = '';
                 this.signinData.email = '';
                 this.signinData.password = '';
+                this.loading.set(false);
 
                 this.router.navigate(['dashboard']);
             },
@@ -126,6 +135,7 @@ export class LoginScreen {
                 this.errorText.set(error.error?.detail || 'Failed to create store, try again');
                 this.signinData.email = '';
                 this.signinData.password = '';
+                this.loading.set(false);
             }
         });
     }

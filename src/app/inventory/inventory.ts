@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 import { ErrorBar } from '../errorBar/errorBar';
+import { LoadingBar } from '../loading/loading';
 
 interface staff {
     name: string,
@@ -19,7 +20,7 @@ interface StaffList extends staff {
 @Component ({
     selector: 'inventory',
     standalone: true,
-    imports: [ErrorBar, FormsModule],
+    imports: [ErrorBar, FormsModule, LoadingBar],
     templateUrl: './inventory.html',
     styleUrls: ['./inventory.css']
 })
@@ -33,6 +34,7 @@ export class InventoryPage implements OnInit {
     }
 
     errorText = signal('');
+    loading = signal(false);
 
     StaffList = signal<StaffList[]>([]);
 
@@ -45,15 +47,19 @@ export class InventoryPage implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.get<StaffList[]>(
             `https://sm-api-n27i.onrender.com/inventory-staff?S_id=${S_id}`
         ).subscribe({
             next: (success) => {
                 this.errorText.set('');
                 this.StaffList.set(success);
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to get Staff');
+                this.loading.set(false);
             }
         });
     }
@@ -86,6 +92,8 @@ export class InventoryPage implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post(
             'https://sm-api-n27i.onrender.com/add-employee',
             {
@@ -99,9 +107,11 @@ export class InventoryPage implements OnInit {
                 this.Staff.role = '';
                 this.Staff.password = '';
                 this.getStaff();
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to register employee.');
+                this.loading.set(false);
             }
         });
     }
@@ -115,6 +125,8 @@ export class InventoryPage implements OnInit {
             return;
         }
 
+        this.loading.set(true);
+
         this.http.post(
             'https://sm-api-n27i.onrender.com/delete-staff',
             {
@@ -125,9 +137,11 @@ export class InventoryPage implements OnInit {
             next: (success) => {
                 this.errorText.set('');
                 this.getStaff();
+                this.loading.set(false);
             },
             error: (error) => {
                 this.errorText.set(error.error?.detail || 'Failed to delete employee.');
+                this.loading.set(false);
             }
         });
     }
