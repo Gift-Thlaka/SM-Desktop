@@ -10,7 +10,7 @@
     "test": "ng test",
     "electron": "electron .",
     "build:desktop": "ng build --configuration production --base-href ./",
-    "build:windows": "npm run build:desktop && electron-builder --win nsis"
+    "build:windows": "npm run build:desktop && electron-builder --win nsis --publish never"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
