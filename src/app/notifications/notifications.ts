@@ -34,7 +34,7 @@ export class Notifications implements OnInit{
     const S_id = localStorage.getItem("S_id");
 
     this.http.get<item[]>(
-        `http://localhost:8000/notifications?S_id=${S_id}`
+        `https://sm-api-n27i.onrender.com/notifications?S_id=${S_id}`
     ).subscribe({
         next: (success) => {
 
@@ -61,7 +61,7 @@ export class Notifications implements OnInit{
         const S_id = localStorage.getItem("S_id");
 
         this.http.post(
-            'http://localhost:8000/notifications/release',
+            'https://sm-api-n27i.onrender.com/notifications/release',
             {
                 S_id: Number(S_id),
                 N_id: itemId

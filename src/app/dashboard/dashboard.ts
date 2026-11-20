@@ -51,7 +51,7 @@ export class DashboardScreen implements OnInit {
         }
 
         this.http.get<shelfProduct[]> (
-            `http://localhost:8000/get-shelf?S_id=${S_id}`
+            `https://sm-api-n27i.onrender.com/get-shelf?S_id=${S_id}`
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
@@ -109,7 +109,7 @@ export class DashboardScreen implements OnInit {
         this.products.S_id = Number(S_id);
 
         this.http.post (
-            'http://localhost:8000/add-product', this.products
+            'https://sm-api-n27i.onrender.com/add-product', this.products
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
@@ -149,7 +149,7 @@ export class DashboardScreen implements OnInit {
         }
 
         this.http.post(
-            'http://localhost:8000/update-item',
+            'https://sm-api-n27i.onrender.com/update-item',
             {
                 item_id: ItemId,
                 price: this.products.price

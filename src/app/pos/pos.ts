@@ -48,7 +48,7 @@ export class POS implements OnInit {
         }
 
         this.http.get<shelfProduct[]>(
-            `http://localhost:8000/get-shelf?S_id=${S_id}`
+            `https://sm-api-n27i.onrender.com/get-shelf?S_id=${S_id}`
         ).subscribe({
             next: (success) => {
                 this.errorText.set('');
@@ -69,7 +69,7 @@ export class POS implements OnInit {
         }
 
         this.http.post<any>(
-            'http://localhost:8000/buy-product',
+            'https://sm-api-n27i.onrender.com/buy-product',
             {
                 P_id: P_id,
                 S_id: Number(S_id)

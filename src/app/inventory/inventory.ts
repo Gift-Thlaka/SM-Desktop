@@ -46,7 +46,7 @@ export class InventoryPage implements OnInit {
         }
 
         this.http.get<StaffList[]>(
-            `http://localhost:8000/inventory-staff?S_id=${S_id}`
+            `https://sm-api-n27i.onrender.com/inventory-staff?S_id=${S_id}`
         ).subscribe({
             next: (success) => {
                 this.errorText.set('');
@@ -87,7 +87,7 @@ export class InventoryPage implements OnInit {
         }
 
         this.http.post(
-            'http://localhost:8000/add-employee',
+            'https://sm-api-n27i.onrender.com/add-employee',
             {
                 ...this.Staff,
                 S_id: Number(S_id)
@@ -116,7 +116,7 @@ export class InventoryPage implements OnInit {
         }
 
         this.http.post(
-            'http://localhost:8000/delete-staff',
+            'https://sm-api-n27i.onrender.com/delete-staff',
             {
                 E_id: E_Id,
                 S_id: Number(S_id)

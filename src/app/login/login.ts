@@ -54,7 +54,7 @@ export class LoginScreen {
         }
 
         this.http.post<LoginResponse>(
-            'http://localhost:8000/login', this.LoginData
+            'https://sm-api-n27i.onrender.com/login', this.LoginData
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
@@ -109,7 +109,7 @@ export class LoginScreen {
         }
 
         this.http.post<LoginResponse>(
-            'http://localhost:8000/signin', this.signinData
+            'https://sm-api-n27i.onrender.com/signin', this.signinData
         ).subscribe ({
             next: (success) => {
                 this.errorText.set('');
