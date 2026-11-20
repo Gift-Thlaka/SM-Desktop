@@ -1,12 +1,16 @@
 {
   "name": "sm-desktop",
   "version": "0.0.0",
+  "main": "main.cjs",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "electron .",
+    "build:desktop": "ng build --configuration production --base-href ./",
+    "build:windows": "npm run build:desktop && electron-builder --win nsis"
   },
   "private": true,
   "packageManager": "npm@11.19.0",
@@ -24,9 +28,32 @@
     "@angular/build": "^22.1.8",
     "@angular/cli": "^22.1.8",
     "@angular/compiler-cli": "^22.1.0",
+    "electron": "^45.4.1",
+    "electron-builder": "^26.18.0",
     "jsdom": "^28.0.0",
     "prettier": "^3.8.1",
     "typescript": "~6.0.2",
     "vitest": "^4.0.8"
+  },
+
+  "build": {
+      "appId": "com.shelfmanager.desktop",
+      "productName": "Shelf Manager",
+      "directories": {
+          "output": "release"
+      },
+      "files": [
+          "main.cjs",
+          "dist/SM-Desktop/browser/**/*",
+          "package.json"
+      ],
+      "win": {
+          "target": "nsis"
+      },
+      "nsis": {
+          "oneClick": false,
+          "allowToChangeInstallationDirectory": true
+      }
   }
+
 }
