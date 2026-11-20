@@ -131,6 +131,7 @@ export class DashboardScreen implements OnInit {
     update = signal(false);
 
     openUpdate(ItemId: number): void {
+        this.products.price = '';
         this.selectedItem.set(ItemId);
         this.update.set(true);
     }
@@ -143,23 +144,30 @@ export class DashboardScreen implements OnInit {
     updateItem(ItemId: number): void {
 
         if (this.products.price.trim() === '') {
-            this.errorText.set('Failed, Please enter new price');
-            this.closeUpdate();
+            this.errorText.set('Please enter new price.');
             return;
         }
 
         this.http.post(
-            'http://localhost:8000/update-item', {item_id: ItemId, price: this.products.price}
-        ).subscribe ({
-            next: (success) => {
-                this.errorText.set('');
-                this.products.price='';
+            'http://localhost:8000/update-item',
+            {
+                item_id: ItemId,
+                price: this.products.price
+            }
+        ).subscribe({
+            next: (success: any) => {
+                this.errorText.set(success.message);
+
+                this.products.price = '';
                 this.closeUpdate();
                 this.getShelf();
             },
             error: (error) => {
-                this.closeUpdate();
-                this.errorText.set(error.error?.detail || 'Failed to update item');
+                console.log('UPDATE ITEM ERROR:', error);
+
+                this.errorText.set(
+                    error.error?.detail || 'Failed to update item.'
+                );
             }
         });
     }
