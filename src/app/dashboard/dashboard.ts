@@ -100,6 +100,11 @@ export class DashboardScreen implements OnInit {
             return;
         }
 
+        if (!/^\d{8}$|^\d{12}$|^\d{13}$|^\d{14}$/.test(this.products.barcode)) {
+            this.errorText.set("Enter a valid barcode.");
+            return;
+        }
+
         if (this.products.best_before.trim() === '') {
             this.errorText.set('enter expiry date of batch.');
             return;        

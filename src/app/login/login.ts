@@ -50,6 +50,11 @@ export class LoginScreen {
             return;
         }
 
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.LoginData.email)) {
+            this.errorText.set("Ensure a valid email address");
+            return;
+        }
+
         if (this.LoginData.password.trim() === '') {
             this.errorText.set('Enter password');
             return;
@@ -109,8 +114,18 @@ export class LoginScreen {
             return;
         }
 
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.signinData.email)) {
+            this.errorText.set("Ensure a valid email address");
+            return;
+        }
+
         if (this.signinData.password.trim() === '') {
             this.errorText.set('Enter secret password');
+            return;
+        }
+
+        if (this.signinData.password.length < 8) {
+            this.errorText.set("Password must contain at least 8 characters");
             return;
         }
 
