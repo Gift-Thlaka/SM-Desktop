@@ -129,6 +129,11 @@ export class LoginScreen {
             return;
         }
 
+        if (!/(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`])/.test(this.signinData.password)) {
+            this.errorText.set('Password must contain at least one capital letter and one special character.');
+            return;
+        }
+
         this.loading.set(true);
 
         this.http.post<LoginResponse>(

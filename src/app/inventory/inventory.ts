@@ -92,6 +92,16 @@ export class InventoryPage implements OnInit {
             return;
         }
 
+        if (this.Staff.password.length < 8) {
+            this.errorText.set("Password must contain at least 8 characters");
+            return;
+        }
+
+        if (!/(?=.*[A-Z])(?=.*[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\/~`])/.test(this.Staff.password)) {
+            this.errorText.set('Password must contain at least one capital letter and one special character.');
+            return;
+        }
+
         this.loading.set(true);
 
         this.http.post(
